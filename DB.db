@@ -1,0 +1,119 @@
+
+CREATE TABLE EMPLOYEE (
+    employee_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    hourly_rate DECIMAL(10, 2) NOT NULL,
+    hire_date DATE NOT NULL
+);
+
+CREATE TABLE PROJECT (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    budget DECIMAL(15, 2) NOT NULL,
+    manager_id INT,
+    FOREIGN KEY (manager_id) REFERENCES EMPLOYEE(employee_id)
+);
+
+CREATE TABLE ATTENDANCE (
+    attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    project_id INT NOT NULL,
+    check_in DATETIME NOT NULL,
+    check_out DATETIME,
+    status VARCHAR(20) NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id),
+    FOREIGN KEY (project_id) REFERENCES PROJECT(project_id)
+);
+
+CREATE TABLE PROJECT_ASSIGNMENT (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    employee_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    role VARCHAR(50) NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES PROJECT(project_id),
+    FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id)
+);
+
+
+CREATE TABLE WAREHOUSE (
+    warehouse_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    location VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE MATERIAL (
+    material_id INT AUTO_INCREMENT PRIMARY KEY,
+    warehouse_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (warehouse_id) REFERENCES WAREHOUSE(warehouse_id)
+);
+
+
+CREATE TABLE MATERIAL_USAGE (
+    usage_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    material_id INT NOT NULL,
+    quantity INT NOT NULL,
+    usage_date DATE NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES PROJECT(project_id),
+    FOREIGN KEY (material_id) REFERENCES MATERIAL(material_id)
+);
+
+
+CREATE TABLE TOOL (
+    tool_id INT AUTO_INCREMENT PRIMARY KEY,
+    warehouse_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    condition VARCHAR(50) NOT NULL,
+    purchase_date DATE NOT NULL,
+    FOREIGN KEY (warehouse_id) REFERENCES WAREHOUSE(warehouse_id)
+);
+
+
+CREATE TABLE TOOL_ASSIGNMENT (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    tool_id INT NOT NULL,
+    employee_id INT NOT NULL,
+    project_id INT NOT NULL,
+    checkout_date DATETIME NOT NULL,
+    return_date DATETIME,
+    return_condition VARCHAR(50),
+    FOREIGN KEY (tool_id) REFERENCES TOOL(tool_id),
+    FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id),
+    FOREIGN KEY (project_id) REFERENCES PROJECT(project_id)
+);
+
+
+CREATE TABLE VEHICLE (
+    vehicle_id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    plate_number VARCHAR(20) NOT NULL,
+    current_mileage INT NOT NULL,
+    fuel_cost_per_km DECIMAL(5, 2) NOT NULL,
+    amortization_cost_per_km DECIMAL(5, 2) NOT NULL
+);
+
+
+CREATE TABLE VEHICLE_ASSIGNMENT (
+    assignment_id INT AUTO_INCREMENT PRIMARY KEY,
+    vehicle_id INT NOT NULL,
+    employee_id INT NOT NULL,
+    project_id INT NOT NULL,
+    checkout_date DATETIME NOT NULL,
+    return_date DATETIME,
+    km_driven INT,
+    FOREIGN KEY (vehicle_id) REFERENCES VEHICLE(vehicle_id),
+    FOREIGN KEY (employee_id) REFERENCES EMPLOYEE(employee_id),
+    FOREIGN KEY (project_id) REFERENCES PROJECT(project_id)
+);
